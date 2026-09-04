@@ -1,0 +1,3 @@
+import { CheckCircle2 } from "lucide-react";
+import { Link, useParams } from "react-router-dom";
+export default function OrderSuccess(){const {id}=useParams();return <section className="section container"><div className="success-page"><CheckCircle2 className="success-icon"/><span className="eyebrow">BOOKING CONFIRMED</span><h1>Your ride is reserved.</h1><p>Your RentRide booking <strong>#{id}</strong> has been added to My Bookings.</p><div><Link className="btn btn-primary" to="/bookings">View my booking</Link><Link className="btn btn-outline" to="/cars">Browse more cars</Link></div></div></section>}

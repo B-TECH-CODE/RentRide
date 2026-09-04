@@ -1,0 +1,15 @@
+import { useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { cars } from "../../data/cars";
+import { addBooking } from "../../redux/slices/bookingSlice";
+
+export default function Checkout(){
+ const {id}=useParams(); const car=cars.find(c=>c.id===id); const user=useSelector(s=>s.auth.user); const dispatch=useDispatch(); const navigate=useNavigate();
+ const [form,setForm]=useState({pickup:"",dropoff:"",location:car?.location||"Hyderabad",notes:""}); const [error,setError]=useState("");
+ if(!car)return <div className="section container empty-state"><h2>Car not found</h2></div>;
+ const days=form.pickup&&form.dropoff?Math.max(1,Math.ceil((new Date(form.dropoff)-new Date(form.pickup))/86400000)):1;
+ const total=days*car.price;
+ const submit=e=>{e.preventDefault(); if(!user)return navigate("/login",{state:{from:`/checkout/${id}`}}); if(!form.pickup||!form.dropoff)return setError("Please select pickup and return dates."); if(new Date(form.dropoff)<new Date(form.pickup))return setError("Return date must be after pickup date."); const booking={id:"RR"+Date.now().toString().slice(-8),car:`${car.brand} ${car.model}`,image:car.image,pickup:form.pickup,dropoff:form.dropoff,location:form.location,total,status:"Confirmed",createdAt:new Date().toISOString()}; dispatch(addBooking(booking)); navigate(`/order-success/${booking.id}`);};
+ return <section className="section container"><Link className="back-link" to={`/cars/${id}`}>← Back to car</Link><div className="checkout-grid"><form className="checkout-form form-stack" onSubmit={submit}><div><span className="eyebrow">CHECKOUT</span><h1>Complete your booking</h1><p>Enter your trip details and confirm your ride.</p></div>{error&&<div className="form-error">{error}</div>}<label>Pick-up location<select value={form.location} onChange={e=>setForm({...form,location:e.target.value})}><option>Hyderabad</option><option>Bengaluru</option><option>Chennai</option><option>Vijayawada</option></select></label><div className="two-col"><label>Pick-up date<input type="date" value={form.pickup} onChange={e=>setForm({...form,pickup:e.target.value})} required/></label><label>Return date<input type="date" value={form.dropoff} onChange={e=>setForm({...form,dropoff:e.target.value})} required/></label></div><label>Special notes (optional)<textarea rows="4" value={form.notes} onChange={e=>setForm({...form,notes:e.target.value})} placeholder="Anything we should know?"/></label><button className="btn btn-primary btn-full">Confirm booking</button></form><aside className="summary-card"><img src={car.image} alt={car.model}/><span className="eyebrow">{car.category}</span><h2>{car.brand} {car.model}</h2><div className="summary-line"><span>Daily rate</span><strong>₹{car.price.toLocaleString()}</strong></div><div className="summary-line"><span>Rental days</span><strong>{days}</strong></div><div className="summary-total"><span>Total</span><strong>₹{total.toLocaleString()}</strong></div><small>Taxes and final fees can be connected to your backend payment flow.</small></aside></div></section>;
+}

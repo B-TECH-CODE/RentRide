@@ -1,0 +1,6 @@
+{
+  "project": "RentRide",
+  "note": "Demo seed data. The current frontend uses src/data/cars.js and localStorage. This file is ready to be replaced by a real database/API.",
+  "roles": ["customer", "admin"],
+  "collections": ["users", "cars", "bookings", "reviews"]
+}
