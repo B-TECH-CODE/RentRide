@@ -1,8 +1,12 @@
-// Demo API service. Replace these functions with fetch/axios calls when a backend is connected.
-import { cars } from "../data/cars";
+import axios from "axios";
 
-export const api = {
-  getCars: async () => cars,
-  getCar: async (id) => cars.find(car => car.id === id),
-  createBooking: async (booking) => booking
+const API = axios.create({
+  baseURL: "http://localhost:5000/api",
+});
+
+export const getCars = async () => {
+  const response = await API.get("/cars");
+  return response.data;
 };
+
+export default API;
