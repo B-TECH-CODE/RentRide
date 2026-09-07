@@ -1,5 +1,5 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
-
+import { Menu, X, User, CarFront } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../redux/slices/authSlice";
 import { useState } from "react";
@@ -9,7 +9,7 @@ export default function Navbar({ minimal = false }) {
   const user = useSelector(s => s.auth.user);
   const wishlist = useSelector(s => s.wishlist);
   const dispatch = useDispatch();
-  const navigate = useNavigate();s
+  const navigate = useNavigate();
 
   const signOut = () => { dispatch(logout()); navigate("/"); setOpen(false); };
 
